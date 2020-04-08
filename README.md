@@ -25,4 +25,4 @@ pip install generic-design-patterns
 ## Specification
 
 
-[cor]: cor.svg "Chain of responsibility example"
+[cor]: https://github.com/ShadowCodeCz/generic_design_patterns/blob/master/cor.svg "Chain of responsibility example"
