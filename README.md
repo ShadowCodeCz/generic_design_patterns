@@ -16,9 +16,13 @@ pip install generic-design-patterns
 
 
 ## Chain Of Responsibility
+![Chain of responsibility example][cor]
 ...
 
 ## Event Provider
 ...
 
 ## Specification
+
+
+[cor]: cor.svg "Chain of responsibility example"
