@@ -2,6 +2,7 @@ import re
 import operator
 import itertools
 
+# TODO: Switch
 
 class ConditionEvaluationResult(object):
     def __init__(self, name, result):
