@@ -3,48 +3,34 @@ import pytest
 import generic_design_patterns as gdp
 
 
-class TestPlugin(gdp.chain.ChainItemPlugin):
+class CustomChainPlugin(gdp.chain.ChainNodePlugin):
     pass
 
 
-class TxtPlugin(TestPlugin):
-    def __init__(self):
-        super(TxtPlugin, self).__init__()
-        self.checker_class = TxtChecker
-        self.handler_class = TxtHandler
-        self.description = "txt"
+class TxtChainPlugin(CustomChainPlugin):
+    answer = "txt successfully handled"
 
-
-class TxtChecker(gdp.chain.Checker):
     def check(self, input_string):
         return "txt" == input_string.strip()
 
-
-class TxtHandler(gdp.chain.Handler):
-    answer = "txt_handle"
-
     def handle(self, input_string):
         return self.answer
 
-
-class JsonPlugin(TestPlugin):
-    def __init__(self):
-        super(JsonPlugin, self).__init__()
-        self.checker_class = JsonChecker
-        self.handler_class = JsonHandler
-        self.description = "json"
+    def description(self):
+        return "txt"
 
 
-class JsonChecker(gdp.chain.Checker):
+class JsonChainPlugin(CustomChainPlugin):
+    answer = "json successfully handled"
+
     def check(self, input_string):
         return "json" == input_string.strip()
 
-
-class JsonHandler(gdp.chain.Handler):
-    answer = "json_handle"
-
     def handle(self, input_string):
         return self.answer
+
+    def description(self):
+        return "json"
 
 
 class TInput:
@@ -67,10 +53,10 @@ plugin_dir = os.path.join(test_dir, "chain_plugin")
 tis = []
 
 ti = TInput()
-ti.collectors += [gdp.chain.SubclassPluginCollector(TestPlugin)]
+ti.collectors += [gdp.chain.SubclassPluginCollector(CustomChainPlugin)]
 ti.handle += [
-    TIO("txt", TxtHandler.answer),
-    TIO("json", JsonHandler.answer),
+    TIO("txt", TxtChainPlugin.answer),
+    TIO("json", JsonChainPlugin.answer),
     TIO("yaml", None)
 ]
 ti.descriptions += ["txt", "json"]
@@ -80,8 +66,8 @@ tis.append(ti)
 ti = TInput()
 ti.collectors += [gdp.chain.YapsyRegExCollector([plugin_dir], "t_plugin_.+.py$")]
 ti.handle += [
-    TIO("xml", "xml_handle"),
-    TIO("ini", "ini_handle"),
+    TIO("xml", "xml successfully handled"),
+    TIO("ini", "ini successfully handled"),
     TIO("yaml", None)
 ]
 ti.descriptions += ["xml", "ini"]
@@ -90,14 +76,14 @@ tis.append(ti)
 
 ti = TInput()
 ti.collectors += [
-    gdp.chain.SubclassPluginCollector(TestPlugin),
+    gdp.chain.SubclassPluginCollector(CustomChainPlugin),
     gdp.chain.YapsyRegExCollector([plugin_dir], "t_plugin_.+.py$")
 ]
 ti.handle += [
-    TIO("txt", TxtHandler.answer),
-    TIO("json", JsonHandler.answer),
-    TIO("xml", "xml_handle"),
-    TIO("ini", "ini_handle"),
+    TIO("txt", TxtChainPlugin.answer),
+    TIO("json", JsonChainPlugin.answer),
+    TIO("xml", "xml successfully handled"),
+    TIO("ini", "ini successfully handled"),
     TIO("yaml", None)
 ]
 ti.descriptions += ["txt", "json", "xml", "ini"]

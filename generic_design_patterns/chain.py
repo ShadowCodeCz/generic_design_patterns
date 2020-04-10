@@ -51,7 +51,7 @@ class Builder(object):
     @staticmethod
     def build(collectors):
         plugins = Builder.collect(collectors)
-        chain = ChainItem(None, EndChainItem())
+        chain = ChainNode(None, EndChainNode())
         chain = Builder.add_plugins_to_chain(chain, plugins)
         return chain
 
@@ -65,20 +65,18 @@ class Builder(object):
     @staticmethod
     def add_plugins_to_chain(chain, plugins):
         for plugin in plugins:
-            chain = ChainItem(chain, plugin)
+            chain = ChainNode(chain, plugin)
         return chain
 
 
-class ChainItem(object):
+class ChainNode(object):
     def __init__(self, successor, plugin):
         self.successor = successor
-        self.checker = plugin.checker_class()
-        self.handler = plugin.handler_class()
-        self.description = plugin.description
+        self.plugin = plugin
 
     def handle(self, *args, **kwargs):
-        if self.checker.check(*args, **kwargs):
-            return self.handler.handle(*args, **kwargs)
+        if self.plugin.check(*args, **kwargs):
+            return self.plugin.handle(*args, **kwargs)
         else:
             if self.successor:
                 return self.successor.handle(*args, **kwargs)
@@ -88,41 +86,28 @@ class ChainItem(object):
             return []
         else:
             descriptions = self.successor.descriptions()
-            descriptions.append(self.description)
+            descriptions.append(self.plugin.description())
             return descriptions
 
 
-class ChainItemPlugin(yapsy.IPlugin.IPlugin):
-    def __init__(self):
-        super(ChainItemPlugin, self).__init__()
-        self.checker_class = None
-        self.handler_class = None
-        self.description = None
-
-
-class Checker(object):
-    def check(self, *args, **kwargs):
-        raise NotImplemented
-
-
-class Handler(object):
+class ChainNodePlugin(yapsy.IPlugin.IPlugin):
     def handle(self, *args, **kwargs):
         raise NotImplemented
 
+    def check(self, *args, **kwargs):
+        raise NotImplemented
 
-class AlwaysTrueChecker(Checker):
+    def description(self):
+        raise NotImplemented
+
+
+class EndChainNode(ChainNodePlugin):
     def check(self, *args, **kwargs):
         return True
 
-
-class EndHandler(Handler):
     def handle(self, *args, **kwargs):
         return None
 
-
-class EndChainItem(object):
-    def __init__(self):
-        self.checker_class = AlwaysTrueChecker
-        self.handler_class = EndHandler
-        self.description = None
+    def description(self):
+        return None
 

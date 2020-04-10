@@ -3,7 +3,6 @@ Python package implements design patterns in generic way. Its can be used in a w
 Some of these patterns are slightly improved for efficient use in real-world projects.
 
 ## Installation 
-
 ```python
 pip install generic-design-patterns 
 ``` 
@@ -18,84 +17,73 @@ pip install generic-design-patterns
 
 ## Chain Of Responsibility
 The purpose of this text is not to explain the principles of CoR. For example, source describing CoR is [refactoring.guru].
-This package implements items of chain as plugin. Plugin can be class or [Yapsy] plugin. For more information visit [Yapsy documentation] pages.
+This package implements node of chain as plugin. Plugin can be average class or [Yapsy] plugin. For more information visit [Yapsy documentation] pages.
 
 
 ### How it works in few steps
-1. User create chain item (checkers, handlers, descriptions)
+1. User create chain node plugin
 
-2. User set collectors which collect all chain items (plugins)
+2. User set collectors which collect all chain nodes (plugins)
 
 3. User call build function
 
 
-### Chain Item Parts
-In this implementation, each item of chain is composed of:
-* checker - it detects that the request is handleable by the item
+### Chain Node
+Chain node have to inherit from  `gdp.chain.ChainNodePlugin`, which inherit form `yapsy.IPlugin.IPlugin`. 
 
-* handler - performing unit which processes the request
+Each node of chain have to implement these methods:
+* `check()` - It detects that the request is handleable by the node. The method has to return bool value.
 
-* description - this part somehow describe the item (it can be string or any other object)
+* `handle()` - It is performing method which processes the request. It returns result. 
 
-![Chain of plugins design][chain_of_plugins_design]
+* `description()` - It returns string or any other class which describes the node/plugin.
+
+All nodes/plugins (in one chain) have to implement `check()` and `handle()` with same arguments.    
 
 ### Examples
-Here is a short minimum example. It implements chain items for pseudo handling different text formats.
+Here is a short minimum example. It implements chain nodes for pseudo handling different text formats.
 
 ![Chain of responsibility example][chain_example]
 
-#### TXT Item
+#### TXT Node Plugin
 ```python
 import generic_design_patterns as gdp
 
-class TxtPlugin(gdp.chain.ChainItemPlugin):
-    def __init__(self):
-        super(TxtPlugin, self).__init__()
-        self.checker_class = TxtChecker
-        self.handler_class = TxtHandler
-        self.description = "txt"
+class TxtChainPlugin(gdp.chain.ChainNodePlugin):
+    answer = "txt successfully handled"
 
-class TxtChecker(gdp.chain.ChainItemPlugin):
     def check(self, input_string):
         return "txt" == input_string.strip()
 
-
-class TxtHandler(gdp.chain.ChainItemPlugin):
-    answer = "txt_handle"
-
     def handle(self, input_string):
         return self.answer
 
+    def description(self):
+        return "txt"
 ``` 
-#### JSON Item
+
+#### JSON Node Plugin
 ```python
 import generic_design_patterns as gdp
 
-class JsonPlugin(gdp.chain.ChainItemPlugin):
-    def __init__(self):
-        super(JsonPlugin, self).__init__()
-        self.checker_class = JsonChecker
-        self.handler_class = JsonHandler
-        self.description = "json"
+class JsonChainPlugin(gdp.chain.ChainNodePlugin):
+    answer = "json successfully handled"
 
-
-class JsonChecker(gdp.chain.ChainItemPlugin):
     def check(self, input_string):
         return "json" == input_string.strip()
 
-
-class JsonHandler(gdp.chain.Handler):
-    answer = "json_handle"
-
     def handle(self, input_string):
         return self.answer
+
+    def description(self):
+        return "json"
 ``` 
 
 #### Build & Use Chain
 ```python
 import generic_design_patterns as gdp
 
-collectors = [gdp.chain.SubclassPluginCollector(gdp.chain.ChainItemPlugin)]
+collectors = [gdp.chain.SubclassPluginCollector(gdp.chain.ChainNodePlugin)]
 chain = gdp.chain.build(collectors)
 
 for request in ["txt", "json", "yaml"]:
@@ -104,8 +92,8 @@ for request in ["txt", "json", "yaml"]:
 ``` 
 
 ```python
->>> txt_handle
->>> json_handle
+>>> txt successfully handled
+>>> json successfully handled
 >>> None
 ``` 
 
@@ -123,9 +111,9 @@ This standard implementation of publisher-subscriber design pattern. There are n
 
 ### Examples
 The code shows minimum example. Note:
-* The subscriber has to implement `update()` method. Package contains `AdvancedSubscriber` class which add methods for subscribe and unsubscribe itself.
+* The subscriber has to implement `update()` method. The package contains `AdvancedSubscriber` class which add methods for subscribe and unsubscribe itself.
 
-* Publisher is created only for this example. Important is line where `notify()` method is called. 
+* The publisher is created only for this example. Important is line where `notify()` method is called. 
 
 * The example shows how to make subscription. It has to part string `message` and `subscriber` object.
 
@@ -158,7 +146,8 @@ provider.subscribe(dummy_message, subscriber)
 
 publisher = DummyPublisher(provider)
 publisher.publish()
-print(subscriber.notification)
+
+print(subscriber.notification.message)
 ``` 
 
 ```python
@@ -166,6 +155,7 @@ print(subscriber.notification)
 ``` 
 
 ## Specification
+
 
 
 [chain_example]: img/chain_example.svg "Chain of responsibility example"
