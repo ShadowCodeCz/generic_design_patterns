@@ -177,6 +177,7 @@ Now define rules for selecting items:
 
 * Select items its index is higher than 2 and it contains "e" or "a" but not both.  (case insensitive)
 
+Implement single conditions by specification pattern.
 ```python
 import generic_design_patterns as gdp
 
