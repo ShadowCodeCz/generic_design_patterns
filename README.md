@@ -197,10 +197,8 @@ class ContainE(ContainChar):
 
 
 class IsIndexHigherThanTwo(gdp.specification.Condition):
-    required_index = 2
-
     def is_satisfied(self, index, item):
-        return index > self.required_index
+        return index > 2
 
 class FirstCharIsB(gdp.specification.Condition):
     def is_satisfied(self, index, item):
