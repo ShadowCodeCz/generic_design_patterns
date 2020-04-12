@@ -4,6 +4,7 @@ import itertools
 
 # TODO: Switch
 
+
 class ConditionEvaluationResult(object):
     def __init__(self, name, result):
         self.name = name
@@ -89,4 +90,5 @@ class Xor(Composite):
 
 class Invert(Composite):
     logic_operator = operator.not_
+
 

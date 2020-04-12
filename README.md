@@ -16,7 +16,7 @@ pip install generic-design-patterns
 
 
 ## Chain Of Responsibility
-The purpose of this text is not to explain the principles of CoR. For example, source describing CoR is [refactoring.guru].
+The purpose of this text is not to explain the principles of chain of responsibility. For example, source describing CoR is [refactoring.guru].
 This package implements node of chain as plugin. Plugin can be average class or [Yapsy] plugin. For more information visit [Yapsy documentation] pages.
 
 
@@ -155,11 +155,80 @@ print(subscriber.notification.message)
 ``` 
 
 ## Specification
+The purpose of this text is not to explain the principles of specification pattern. For detail information visit [wiki - specification pattern]. 
+
+However it is useful to describe the most important aspects of this pattern:
+* This pattern encapsulates condition to class.
+
+* This pattern enables compose condition together and create more complex conditions. All this without losing readability and clarity. In other words, it allows to avoid an endless cascade of if-else cascades or some very long condition.
+
+* This pattern allows to create the composite conditions dynamically.
+
+### Examples
+The example is intended to demonstrate the creation of a complex condition.
+
+First of all define list to work with.
+```python
+alphabet_list = ["Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel"]
+```
+
+Now define rules for selecting items:
+* Select items its index is lower or equal to 2 and not start with char "b" (case insensitive).
+
+* Select items its index is higher than 2 and it contains "e" or "a" but not both.  (case insensitive)
+
+```python
+import generic_design_patterns as gdp
+
+class ContainChar(gdp.specification.Condition):
+    required_char = ""
+
+    def is_satisfied(self, index, item):
+        return self.required_char in item.lower()
 
 
+class ContainA(ContainChar):
+    required_char = "a"
+
+
+class ContainE(ContainChar):
+    required_char = "e"
+
+
+class IsIndexHigherThanTwo(gdp.specification.Condition):
+    required_index = 2
+
+    def is_satisfied(self, index, item):
+        return index > self.required_index
+
+class FirstCharIsB(gdp.specification.Condition):
+    def is_satisfied(self, index, item):
+        return item[0].lower() == "b"
+```
+
+Build condition.
+```python
+condition = (~IsIndexHigherThanTwo() & ~FirstCharIsB())  
+condition |= (IsIndexHigherThanTwo() & (ContainA() ^ ContainE()))
+``` 
+
+Iterate over the list and filter items which meet conditions.
+```python
+for index, item in enumerate(alphabet_list):
+    if condition(index, item):
+        print(item)
+``` 
+
+```python
+>>> Alpha
+>>> Charlie
+>>> Echo
+>>> Hotel
+``` 
 
 [chain_example]: img/chain_example.svg "Chain of responsibility example"
 [chain_of_plugins_design]: img/chain_plugin_design.svg "Chain of plugins design"
 [refactoring.guru]: https://refactoring.guru/design-patterns/chain-of-responsibility
 [Yapsy]: https://pypi.org/project/Yapsy/
 [Yapsy documentation]: http://yapsy.sourceforge.net/
+[wiki - specification pattern]: https://en.wikipedia.org/wiki/Specification_pattern
