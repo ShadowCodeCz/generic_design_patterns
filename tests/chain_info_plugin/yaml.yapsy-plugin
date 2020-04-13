@@ -1,0 +1,8 @@
+[Core]
+Name = yaml
+Module = yaml
+
+[Documentation]
+Author = ShadowCodeCz
+Version = 0.1
+Description = Test Yaml Plugin

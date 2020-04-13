@@ -48,12 +48,13 @@ class TIO:
 
 
 test_dir = os.path.dirname(os.path.abspath(__file__))
-plugin_dir = os.path.join(test_dir, "chain_plugin")
+plugin_re_dir = os.path.join(test_dir, "chain_re_plugin")
+plugin_info_dir = os.path.join(test_dir, "chain_info_plugin")
 
 tis = []
 
 ti = TInput()
-ti.collectors += [gdp.chain.SubclassPluginCollector(CustomChainPlugin)]
+ti.collectors += [gdp.plugin.SubclassPluginCollector(CustomChainPlugin)]
 ti.handle += [
     TIO("txt", TxtChainPlugin.answer),
     TIO("json", JsonChainPlugin.answer),
@@ -64,7 +65,7 @@ ti.id = "Subclass Plugin Collector"
 tis.append(ti)
 
 ti = TInput()
-ti.collectors += [gdp.chain.YapsyRegExCollector([plugin_dir], "t_plugin_.+.py$")]
+ti.collectors += [gdp.plugin.YapsyRegExPluginCollector([plugin_re_dir], "t_plugin_.+.py$")]
 ti.handle += [
     TIO("xml", "xml successfully handled"),
     TIO("ini", "ini successfully handled"),
@@ -75,19 +76,34 @@ ti.id = "YapsyRegEx Plugin Collector"
 tis.append(ti)
 
 ti = TInput()
+ti.collectors += [gdp.plugin.YapsyPluginCollector([plugin_info_dir])]
+ti.handle += [
+    TIO("yaml", "yaml successfully handled"),
+    TIO("toml", "toml successfully handled"),
+    TIO("txt", None)
+]
+ti.descriptions += ["yaml", "toml"]
+ti.id = "Yapsy Plugin Collector"
+tis.append(ti)
+
+
+ti = TInput()
 ti.collectors += [
-    gdp.chain.SubclassPluginCollector(CustomChainPlugin),
-    gdp.chain.YapsyRegExCollector([plugin_dir], "t_plugin_.+.py$")
+    gdp.plugin.SubclassPluginCollector(CustomChainPlugin),
+    gdp.plugin.YapsyRegExPluginCollector([plugin_re_dir], "t_plugin_.+.py$"),
+    gdp.plugin.YapsyPluginCollector([plugin_info_dir])
 ]
 ti.handle += [
     TIO("txt", TxtChainPlugin.answer),
     TIO("json", JsonChainPlugin.answer),
     TIO("xml", "xml successfully handled"),
     TIO("ini", "ini successfully handled"),
-    TIO("yaml", None)
+    TIO("yaml", "yaml successfully handled"),
+    TIO("toml", "toml successfully handled"),
+    TIO("noner", None)
 ]
-ti.descriptions += ["txt", "json", "xml", "ini"]
-ti.id = "Subclass & YapsyRegEx Plugin Collector"
+ti.descriptions += ["txt", "json", "xml", "ini", "yaml", "toml"]
+ti.id = "Subclass & YapsyRegEx Plugin Collector & Yapsy Plugin Collector"
 tis.append(ti)
 
 ids = [ti.id for ti in tis]
@@ -102,7 +118,7 @@ def test_handle(ti):
 
 
 @pytest.mark.parametrize("ti", tis, ids=ids)
-def test_descriptions(ti):
+def test_description(ti):
     chain = gdp.chain.build(ti.collectors)
 
-    assert sorted(chain.descriptions()) == sorted(ti.descriptions)
+    assert sorted(chain.description()) == sorted(ti.descriptions)

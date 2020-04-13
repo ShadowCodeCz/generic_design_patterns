@@ -1,4 +1,4 @@
-# Generic Design Patterns
+# Python Generic Design Patterns
 Python package implements design patterns in generic way. Its can be used in a wide range of projects.
 Some of these patterns are slightly improved for efficient use in real-world projects.
 
@@ -7,17 +7,21 @@ Some of these patterns are slightly improved for efficient use in real-world pro
 pip install generic-design-patterns 
 ``` 
 
-## Implemented Patterns
-* Chain of responsibility 
+## Overview
 
-* Event Provider
+### Implemented Patterns
+* [Chain of responsibility](#chain-of-responsibility)
 
-* Specification
+* [Event Provider](#event-provider)
 
+* [Specification](#specification)
+
+### Other parts of package
+* [Plugin](#plugin)
 
 ## Chain Of Responsibility
 The purpose of this text is not to explain the principles of chain of responsibility. For example, source describing CoR is [refactoring.guru].
-This package implements node of chain as plugin. Plugin can be average class or [Yapsy] plugin. For more information visit [Yapsy documentation] pages.
+This package implements node of chain as plugin. For more information about plugin in this package visit [plugin chapter](#plugin).
 
 
 ### How it works in few steps
@@ -79,13 +83,18 @@ class JsonChainPlugin(gdp.chain.ChainNodePlugin):
         return "json"
 ``` 
 
-#### Build & Use Chain
+#### Build chain
 ```python
 import generic_design_patterns as gdp
 
-collectors = [gdp.chain.SubclassPluginCollector(gdp.chain.ChainNodePlugin)]
+collectors = [gdp.plugin.SubclassPluginCollector(gdp.chain.ChainNodePlugin)]
 chain = gdp.chain.build(collectors)
+``` 
+This example uses `gdp.plugin.SubclassPluginCollector`. This package implements more plugin collectors, which are described in part [plugin collectors](#collectors).
 
+
+#### Handle request by chain
+```python
 for request in ["txt", "json", "yaml"]:
     result = chain.handle(request)
     print(result)
@@ -97,7 +106,21 @@ for request in ["txt", "json", "yaml"]:
 >>> None
 ``` 
 
-#### Plugin Collectors
+#### Get description of chain nodes
+The chain is dynamically build by collected plugins. Generally we do not know which nodes chain will contain (before build). 
+However assembled chain should offer information about its nodes. It other words chain should describe which request is able handle.
+This feature cover chain method `description()`.
+
+```python
+descriptions = chain.description()
+print(descriptions)
+``` 
+```python
+>>> ["txt", "json"]
+``` 
+
+
+Input value _yaml_ has not handler in the chain. In that case return value is `None`.
 
 ## Event Provider
 This standard implementation of publisher-subscriber design pattern. There are not any improvements. Note that current implementation is only for single thread/process usage. 
@@ -177,7 +200,7 @@ Now define rules for selecting items:
 
 * Select items its index is higher than 2 and it contains "e" or "a" but not both.  (case insensitive)
 
-Implement single conditions by specification pattern.
+#### Create single conditions by specification pattern
 ```python
 import generic_design_patterns as gdp
 
@@ -188,11 +211,11 @@ class ContainChar(gdp.specification.Condition):
         return self.required_char in item.lower()
 
 
-class ContainA(ContainChar):
+class ContainCharA(ContainChar):
     required_char = "a"
 
 
-class ContainE(ContainChar):
+class ContainCharE(ContainChar):
     required_char = "e"
 
 
@@ -204,14 +227,16 @@ class FirstCharIsB(gdp.specification.Condition):
     def is_satisfied(self, index, item):
         return item[0].lower() == "b"
 ```
+Note that input arguments of method `is_satisfied()`, it depends only on the user's requirements. But it is necessary that the arguments of all conditions are the same.
 
-Build condition.
+#### Put single conditions together
 ```python
-condition = (~IsIndexHigherThanTwo() & ~FirstCharIsB())  
-condition |= (IsIndexHigherThanTwo() & (ContainA() ^ ContainE()))
+condition = (~IndexHigherThanTwo() & ~FirstCharIsB())  
+condition |= (IndexHigherThanTwo() & (ContainCharA() ^ ContainCharE()))
 ``` 
 
-Iterate over the list and filter items which meet conditions.
+#### Apply condition
+Iterate over the list and filter items which meet condition.
 ```python
 for index, item in enumerate(alphabet_list):
     if condition(index, item):
@@ -224,6 +249,96 @@ for index, item in enumerate(alphabet_list):
 >>> Echo
 >>> Hotel
 ``` 
+
+## Plugin 
+Here is not implement some plugin system. Plugin module only encapsulates existing systems 
+and makes it easier to use. Current version of the package uses plugin only for [chain of responsibility](#chain-of-responsibility).
+
+### Collectors
+In the context of this package, plugin can be average class or [Yapsy] plugin. For more information about Yapsy plugin system visit [Yapsy documentation] pages.
+
+Collectors are intended for find plugin and make it accessible. This package contains three basic plugin collectors:
+* `gdp.plugin.YapsyPluginCollector`
+* `gdp.plugin.YapsyRegExPluginCollector`
+* `gdp.plugin.SubclassPluginCollector`
+
+All examples in this chapter follow the example in chapter [chain of responsibility](#chain-of-responsibility).
+
+#### YapsyPluginCollector
+In the default setting, this collector find standard [Yapsy] plugins by `.yapsy-plugin` info file.
+
+Assume this directory structure:
+```
++- plugins/
+   +- toml.py
+   +- toml.yapsy-plugin
+   +- yaml.py
+   +- yaml.yapsy-plugin
+``` 
+
+#####  toml.py
+```python
+import generic_design_patterns as gdp
+
+
+class TomlChainPlugin(gdp.chain.ChainNodePlugin):
+    answer = "toml successfully handled"
+
+    def check(self, input_string):
+        return "toml" == input_string.strip()
+
+    def handle(self, input_string):
+        return self.answer
+
+    def description(self):
+        return "toml"
+``` 
+
+#####  toml.yapsy-plugin
+```
+[Core]
+Name = toml
+Module = toml
+
+[Documentation]
+Author = ShadowCodeCz
+Version = 0.1
+Description = Test Toml Plugin
+``` 
+
+Toml and Yaml plugins are similar. 
+
+##### Collector construction
+```python
+import generic_design_patterns as gdp
+
+collector = gdp.plugin.YapsyPluginCollector(["./plugins"])
+``` 
+If you are experienced with [Yapsy], you can use attribute `plugin_manager` of `gdp.plugin.YapsyPluginCollector` class. It is instance of `yapsy.PluginManager.PluginManager`. 
+
+#### YapsyRegExPluginCollector
+This collector is child of `YapsyPluginCollector`, which bring some improvements:
+* plugins are located in destination by regular expression
+* `.yapsy-plugin` are not required
+
+Assume this directory structure which is similar to previous one only without `.yapsy-plugin`. Contents of `.py` file are same.
+```
++- plugins/
+   +- t_plugin_toml.py
+   +- t_plugin_yaml.py
+``` 
+
+##### Collector construction
+```python
+import generic_design_patterns as gdp
+
+collector = gdp.plugin.YapsyRegExPluginCollector(["./plugins"], "t_plugin_.+.py$")
+```
+Be careful about regular expression. Especially about ending symbol `$`. It will find also `.pyc` files without `$` at the end of re. It will causes problems. 
+
+#### SubclassPluginCollector
+The example of usage the collector `SubclassPluginCollector` is in [chain of responsibility](#chain-of-responsibility) chapter.
+
 
 [chain_example]: img/chain_example.svg "Chain of responsibility example"
 [chain_of_plugins_design]: img/chain_plugin_design.svg "Chain of plugins design"

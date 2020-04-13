@@ -1,0 +1,8 @@
+[Core]
+Name = toml
+Module = toml
+
+[Documentation]
+Author = ShadowCodeCz
+Version = 0.1
+Description = Test Toml Plugin
