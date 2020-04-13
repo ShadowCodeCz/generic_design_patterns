@@ -1,21 +1,21 @@
 language: python
 python:
-  - '2.7'
-  - '3.4'
-  - '3.5'
-  - '3.6'
-  - '3.7'
-  - '3.8'
-  - '3.9-dev'
+- '2.7'
+- '3.4'
+- '3.5'
+- '3.6'
+- '3.7'
+- '3.8'
+- 3.9-dev
 install:
-  - pip install .
+- pip install .
 script:
-  - pytest
+- pytest
 deploy:
   provider: pypi
   user: __token__
   password:
-    secure: mrU9MFusPwOhEf29ZhqGxo/JR+wmYcC+aWj6UIkoy5uBd1rPQ5FoP09aWybQ617vkYQtlpp5+vO6vtjf9fR09mAWs43F3zjdLKN57xZW52hdO8cdeSnNg7bLEt7PJj9wdgQvclhlbVFyWiBOyTSJDTEZqj6gBT0DW/EM3Fx6QM+2DyhULd1pdynzGFidz0X3IpsDw0j2DWVHFqiftir8MQKhKieh5nuDKWL9EzviB7KcHzl18iL3zS1Difb2ISnu65K6f+97mT2v35ep0BaHbo6/0bGFSOTSzSAOYygK+4nqWAKR+arlkn7bHxYJUS1GKvkMz29538N7YJ1EBtB+ff1+R12EweXo/FbDHK70UsIgUK9fDtRRQVb8inGclJ1wYQMz0DWlr2piVkCwIo7vASEfWwapEsvo016l4eb7ssFP0RTYtdRv7aHR4BQyzdxL4NYMwwnaibANRwaDW61wQknFKXE9gpVRw60UgGCKnFd43X3rX0zTjjuxflt7vyVozck2xzbm4DfG9Ipa42u8ffoL9lBKhGmUE7JGw/dODpYGXDjoMp6KD7GtoqUaF4A++cWy3c5zEDilGmLGy0gNJJxEyMze57tHaMQxnhlnViU/uyz5JRsl8ZwSGA+15ICfPOwjR/Ir9bTF3S9wG8I9cxjGFjqv/A2dCb4Dvb0ZSiA=
+    secure: mgFRKqqRsKo6cmwlf+7C1aVSFBFMpImaDDsYwmCeHZ00+LIzqT5vpfo2rdbgSdn7gXbEHa8A0wRY0pc2TDCc5Cyneauil/Pa7G/NENl46MpaZ9ap/K7F6LyosO640K0SNb/9Sx2aJ7v3jF6cmgzeIkcYEPvYoJGKqv+UcQ4KWEeZfjpeBrQhQUAyy51pe25XHHF4Ee9TfrQMerErQ13KB20MKlVlB58yJ3s7qX9+ao0+ytIUmJs1CGfwXWKXY2/WpuI2r/vUxADatShMbFEg2PG/27wZC4A9YcG+Hj8pctVMCGkZOVXF/3FE+QLjRMO+B1Sx6DGtFgcf/Y2N4e3KPp0sdFu+DsqAHFjWTtL+eIxF7wemOxqihes4Zndvk3pzmd4bQgjuq1O/eviT8/yrOoajjFIKnKSFbJSn/tHzBwXNq05UK6TPgG7zQZ/Yrb+C4AVSTsfC2laAd0ar4m39DhPEoWkFyTNwXDoz9Gfu1mFbzzRxnoTbvGmwLEl8ReZ8k7sYs6RzbYNj7LYwxLUePDowshdyru5+I/ikcF9mfKKGfeajONgrMIuSGBQswI654sOqcpLTgMk9r8q3ldG1nI5qbiByAZ+gNUpH7vK0ePyBW+v2K+lvzmjJww4P6AndOTaNsEzbCn4gHYT1Xx9TliHK+PIt4pSo4cKxYvsuy0w=
   on:
     tags: true
     python: 3.6
