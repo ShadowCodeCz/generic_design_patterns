@@ -1,4 +1,6 @@
 # Python Generic Design Patterns
+[![Build Status](https://travis-ci.com/ShadowCodeCz/generic_design_patterns.svg?branch=master)](https://travis-ci.com/ShadowCodeCz/generic_design_patterns)
+
 Python package implements design patterns in generic way. Its can be used in a wide range of projects.
 Some of these patterns are slightly improved for efficient use in real-world projects.
 
@@ -337,7 +339,7 @@ collector = gdp.plugin.YapsyRegExPluginCollector(["./plugins"], "t_plugin_.+.py$
 Be careful about regular expression. Especially about ending symbol `$`. It will find also `.pyc` files without `$` at the end of re. It will causes problems. 
 
 #### SubclassPluginCollector
-The example of usage the collector `SubclassPluginCollector` is in [chain of responsibility](#chain-of-responsibility) chapter.
+It is collecting all child of selected class. The example of usage the collector `SubclassPluginCollector` is in [chain of responsibility](#chain-of-responsibility) chapter.
 
 
 [chain_example]: img/chain_example.svg "Chain of responsibility example"
