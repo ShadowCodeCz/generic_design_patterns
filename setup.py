@@ -21,7 +21,7 @@ description = "Python package implements design patterns in generic way. Its can
 
 setup(
     name='generic_design_patterns',
-    version='1.0.6',
+    version='1.0.7',
     packages=['generic_design_patterns'],
     url='https://github.com/ShadowCodeCz/generic_design_patterns',
     project_urls={
