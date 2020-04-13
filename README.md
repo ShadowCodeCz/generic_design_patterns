@@ -1,5 +1,10 @@
 # Python Generic Design Patterns
+
+[![PyPI-Status](https://img.shields.io/pypi/v/generic-design-patterns.svg)](https://pypi.org/project/generic-design-patterns/)
+[![PyPI-Versions](https://img.shields.io/pypi/pyversions/generic-design-patterns.svg)](https://pypi.org/project/generic-design-patterns/)
+[![GitHub issues](https://img.shields.io/github/issues/ShadowCodeCz/generic_design_patterns)](https://github.com/ShadowCodeCz/generic_design_patterns/issues)
 [![Build Status](https://travis-ci.com/ShadowCodeCz/generic_design_patterns.svg?branch=master)](https://travis-ci.com/ShadowCodeCz/generic_design_patterns)
+[![GitHub license](https://img.shields.io/github/license/ShadowCodeCz/generic_design_patterns)](https://github.com/ShadowCodeCz/generic_design_patterns/blob/master/LICENSE)
 
 Python package implements design patterns in generic way. Its can be used in a wide range of projects.
 Some of these patterns are slightly improved for efficient use in real-world projects.
