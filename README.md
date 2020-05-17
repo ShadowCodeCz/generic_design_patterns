@@ -347,7 +347,7 @@ Be careful about regular expression. Especially about ending symbol `$`. It will
 It is collecting all child of selected class. The example of usage the collector `SubclassPluginCollector` is in [chain of responsibility](#chain-of-responsibility) chapter.
 
 
-[chain_example]: img/chain_example.svg "Chain of responsibility example"
+[chain_example]: https://raw.githubusercontent.com/ShadowCodeCz/generic_design_patterns/184f910ff25711fc03e458cb66bf18346c900995/img/chain_example.svg "Chain of responsibility example"
 [chain_of_plugins_design]: img/chain_plugin_design.svg "Chain of plugins design"
 [refactoring.guru]: https://refactoring.guru/design-patterns/chain-of-responsibility
 [Yapsy]: https://pypi.org/project/Yapsy/
