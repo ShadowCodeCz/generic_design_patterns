@@ -6,7 +6,7 @@ python:
 - '3.6'
 - '3.7'
 - '3.8'
-- 3.9-dev
+- '3.9'
 install:
 - pip install .
 script:
@@ -18,4 +18,4 @@ deploy:
     secure: KkwWRSZlRY9/DCC7xZCGxcQiO/xuLkP7tsUB3x3UY7X/Vc27OMkvUJQNALxawAbOBSQYZL0yp5AVVzmFK/7+8np+ylytHYu4il/FYC0Xv1BGPBB/H9KUcTTtl/4ISDL4sNJCXpKQdpHfmuqcXVLiwTecbl8TljOFrSlZP37iIHJwW0nLSvwmR4Foo+g6cnT0XDl5qCvNZHl3OH1iXodXXiEEhAl7A4vPP83rfkNbolDufPwH98+1TqNRMXT4R6a4SX3IXqq7wBqfJjdKCAqbiV78iEYeMwAwn/T94yPWYbEkIdETeG9z6kVgIE02QgreFNyiaTrsfpbhysLQImGY6mg2MZncrAdDwIBrK/9zWEIlPsdGNL+MUYYVMi4rKh6ZhyNKEc5rFce0hWSo+zSyhAQPJcdwP2WnkoGtawmpVEObac9ZRpLrRTowl1Dm1gRutma8Get/xFTbmmzuf9PnrCaLe2y51wRB6H6RiSenYzuAXDKLEZegY4f2ocZAVoSyjAtm6wrfWrfqEH53iiSSXRWtfAXvpnDqvszJzsWllApnko6WivPRcPr/AGr9282Hj/M/ub17v7FIjbQ6wqNmegl2fKlPeK+VWqw4CXy9cNy7czRwRy5OZOKo/7YVp6yPDljfvZ3d3y87ZtUzy67n2ZHxQOm02Ax1VHJkne57qHM=
   on:
     tags: true
-    python: 3.6
+    python: 3.9
