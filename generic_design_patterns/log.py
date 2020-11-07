@@ -2,12 +2,15 @@ import os
 import logging
 import logging.config
 
+# TODO: tests
+
 
 def configure_only_console(logger_name, level=logging.NOTSET):
 
     cfg = {
         'version': 1,
         'loggers': {
+
             # '': {  # root logger
             #     'level': 'NOTSET',
             #     'handlers': [
