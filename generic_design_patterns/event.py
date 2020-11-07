@@ -1,3 +1,6 @@
+import re
+
+
 class Notification(object):
     def __init__(self, message, publisher=None):
         self.message = message
@@ -21,6 +24,14 @@ class Provider(object):
     def notify_by_queue(self, queue):
         for notification in queue:
             self.notify(notification)
+
+
+class ReProvider(Provider):
+    def notify(self, notification):
+        for pattern, subscribers in self.subscription:
+            if re.match(pattern, notification.message):
+                for subscriber in subscribers:
+                    subscriber.update(notification)
 
 
 class Subscriber(object):
